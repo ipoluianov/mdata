@@ -1,4 +1,4 @@
-package client
+package bybit
 
 import (
 	"encoding/json"
@@ -68,7 +68,9 @@ func GetCandles(symbol string, startDT time.Time, endDT time.Time, interval stri
 
 	var v GetCandlesResponse
 	err = json.Unmarshal(data, &v)
-	//fmt.Println("Unmarshal:", err)
+	if err != nil {
+		fmt.Println("Unmarshal error:", err)
+	}
 	result := make([]Candle, 0)
 	for _, item := range v.Result.List {
 		var c Candle
@@ -124,4 +126,9 @@ func LoadData(symbol string, date time.Time, fileName string) {
 
 	os.MkdirAll(dirName, 0777)
 	os.WriteFile(fileName, []byte(csv), 0666)
+}
+
+func ParseDate(value string) time.Time {
+	t, _ := time.Parse("2006-01-02", value)
+	return t
 }
