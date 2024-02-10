@@ -3,8 +3,10 @@ package httpserver
 import (
 	"context"
 	"crypto/tls"
+	"io/ioutil"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -108,15 +110,112 @@ func SplitRequest(path string) []string {
 	})
 }
 
-func (c *HttpServer) processFile(w http.ResponseWriter, r *http.Request) {
+func (c *HttpServer) processHTTP(w http.ResponseWriter, r *http.Request) {
+	logger.Println("ProcessHTTP host: ", r.Host)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Request-Method", "GET")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		return
 	}
+	c.processFile(w, r)
+}
 
-	w.Write([]byte("CONTENT of " + r.URL.String() + getRealAddr(r)))
+func (c *HttpServer) processFile(w http.ResponseWriter, r *http.Request) {
+	c.file(w, r, r.URL.Path)
+}
+
+func (c *HttpServer) fullpath(url string, host string) (string, error) {
+	result := ""
+
+	result = CurrentExePath() + "/data/" + url
+
+	fi, err := os.Stat(result)
+	if err == nil {
+		if fi.IsDir() {
+			result += "/index.html"
+		}
+	}
+
+	return result, err
+}
+
+func (c *HttpServer) file(w http.ResponseWriter, r *http.Request, urlPath string) {
+	var err error
+	var fileContent []byte
+	var writtenBytes int
+
+	realIP := getRealAddr(r)
+
+	logger.Println("Real IP: ", realIP)
+	logger.Println("HttpServer processFile: ", r.URL.String())
+
+	var urlUnescaped string
+	urlUnescaped, err = url.QueryUnescape(urlPath)
+	if err == nil {
+		urlPath = urlUnescaped
+	}
+
+	if urlPath == "/" || urlPath == "" {
+		urlPath = "/index.html"
+	}
+
+	url, err := c.fullpath(urlPath, r.Host)
+
+	logger.Println("FullPath: " + url)
+
+	if strings.Contains(url, "..") {
+		logger.Println("Wrong FullPath")
+		w.WriteHeader(404)
+		return
+	}
+
+	if err != nil {
+		w.WriteHeader(404)
+		return
+	}
+
+	fileContent, err = ioutil.ReadFile(url)
+
+	if err == nil {
+		w.Header().Set("Content-Type", c.contentTypeByExt(filepath.Ext(url)))
+		writtenBytes, err = w.Write(fileContent)
+		if err != nil {
+			logger.Println("HttpServer sendError w.Write error:", err)
+		}
+		if writtenBytes != len(fileContent) {
+			logger.Println("HttpServer sendError w.Write data size mismatch. (", writtenBytes, " / ", len(fileContent))
+		}
+	} else {
+		logger.Println("HttpServer processFile error: ", err)
+		w.WriteHeader(404)
+	}
+}
+
+func (c *HttpServer) contentTypeByExt(ext string) string {
+	var builtinTypesLower = map[string]string{
+		".css":  "text/css; charset=utf-8",
+		".gif":  "image/gif",
+		".htm":  "text/html; charset=utf-8",
+		".html": "text/html; charset=utf-8",
+		".jpeg": "image/jpeg",
+		".jpg":  "image/jpeg",
+		".js":   "text/javascript; charset=utf-8",
+		".mjs":  "text/javascript; charset=utf-8",
+		".pdf":  "application/pdf",
+		".png":  "image/png",
+		".svg":  "image/svg+xml",
+		".wasm": "application/wasm",
+		".webp": "image/webp",
+		".xml":  "text/xml; charset=utf-8",
+	}
+
+	logger.Println("Ext: ", ext)
+
+	if ct, ok := builtinTypesLower[ext]; ok {
+		return ct
+	}
+	return "text/plain"
 }
 
 func getRealAddr(r *http.Request) string {
@@ -142,4 +241,5 @@ func getRealAddr(r *http.Request) string {
 	}
 
 	return remoteIP
+
 }

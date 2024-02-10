@@ -49,6 +49,7 @@ func GetCandles(symbol string, startDT time.Time, endDT time.Time, interval stri
 		fmt.Println(err)
 		return nil
 	}
+	fmt.Println("Status:", resp.StatusCode)
 	buf := make([]byte, 10*1024*1024)
 	data := make([]byte, 0)
 	for {
@@ -64,7 +65,7 @@ func GetCandles(symbol string, startDT time.Time, endDT time.Time, interval stri
 		//buf = buf[:n]
 
 	}
-	//fmt.Println(string(data), err)
+	fmt.Println(string(data), err)
 
 	var v GetCandlesResponse
 	err = json.Unmarshal(data, &v)

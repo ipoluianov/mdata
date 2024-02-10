@@ -9,6 +9,7 @@
 *.dylib
 
 logs/
+data/
 bundle.crt
 private.key
 
