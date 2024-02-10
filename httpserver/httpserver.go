@@ -61,7 +61,7 @@ func (c *HttpServer) thListenTLS() {
 	c.srvTLS.Handler = c
 
 	logger.Println("HttpServerTLS thListen begin")
-	listener, err := tls.Listen("tcp", ":8488", tlsConfig)
+	listener, err := tls.Listen("tcp", ":8401", tlsConfig)
 	if err != nil {
 		logger.Println("TLS Listener error:", err)
 		return
