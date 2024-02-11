@@ -9,7 +9,21 @@ import (
 	"sort"
 	"strconv"
 	"time"
+
+	"github.com/ipoluianov/mdata/logger"
 )
+
+var stopping bool
+
+func Start() {
+	logger.Println("bybit Start")
+	go ThUpdateInstruments()
+}
+
+func Stop() {
+	logger.Println("bybit Stop")
+	stopping = false
+}
 
 type HeaderResponse struct {
 	RetCode int    `json:"retCode"`
@@ -27,6 +41,20 @@ type GetCandlesResponseInt struct {
 type GetCandlesResponse struct {
 	HeaderResponse
 	Result GetCandlesResponseInt `json:"result"`
+}
+
+type GetInstrumentsItem struct {
+	Symbol string `json:"symbol"`
+}
+
+type GetInstrumentsResponseInt struct {
+	Category string               `json:"category"`
+	List     []GetInstrumentsItem `json:"list"`
+}
+
+type GetInstrumentsResponse struct {
+	HeaderResponse
+	Result GetInstrumentsResponseInt `json:"result"`
 }
 
 type Candle struct {
