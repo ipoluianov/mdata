@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 	"time"
@@ -16,8 +17,8 @@ import (
 
 func FetchInstruments() []string {
 	logger.Println("bybit FetchInstruments begin")
-	time.Sleep(200 * time.Millisecond)
-	requestLine := "https://api-testnet.bybit.com/v5/market/instruments-info?category=spot"
+	time.Sleep(100 * time.Millisecond)
+	requestLine := "https://api.bybit.com/v5/market/instruments-info?category=spot"
 	resp, err := http.Get(requestLine)
 	if err != nil {
 		logger.Println("bybit FetchInstruments error:", err)
@@ -80,6 +81,9 @@ func UpdateInstruments() {
 		fileContent += li
 		fileContent += "\r\n"
 	}
+
+	dirName := filepath.Dir(filePath)
+	os.MkdirAll(dirName, 0777)
 	err := os.WriteFile(filePath, []byte(fileContent), 0666)
 	if err != nil {
 		logger.Println("UpdateInstruments write file error:", err)

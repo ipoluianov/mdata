@@ -18,6 +18,7 @@ var stopping bool
 func Start() {
 	logger.Println("bybit Start")
 	go ThUpdateInstruments()
+	go ThLoad()
 }
 
 func Stop() {
@@ -68,10 +69,10 @@ type Candle struct {
 }
 
 func GetCandles(symbol string, startDT time.Time, endDT time.Time, interval string) []Candle {
-	time.Sleep(200 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond)
 	start := fmt.Sprint(startDT.UnixMilli())
 	end := fmt.Sprint(endDT.UnixMilli() - 1)
-	requestLine := "https://api-testnet.bybit.com/v5/market/kline?category=linear&symbol=" + symbol + "&interval=" + interval + "&start=" + start + "&end=" + end + "&limit=1000"
+	requestLine := "https://api.bybit.com/v5/market/kline?category=spot&symbol=" + symbol + "&interval=" + interval + "&start=" + start + "&end=" + end + "&limit=1000"
 	resp, err := http.Get(requestLine)
 	if err != nil {
 		fmt.Println(err)
@@ -93,7 +94,7 @@ func GetCandles(symbol string, startDT time.Time, endDT time.Time, interval stri
 		//buf = buf[:n]
 
 	}
-	fmt.Println(string(data), err)
+	//fmt.Println(string(data), err)
 
 	var v GetCandlesResponse
 	err = json.Unmarshal(data, &v)
@@ -160,4 +161,9 @@ func LoadData(symbol string, date time.Time, fileName string) {
 func ParseDate(value string) time.Time {
 	t, _ := time.Parse("2006-01-02", value)
 	return t
+}
+
+func TimeByDayIndex(dayIndex int64) time.Time {
+	unixTime := dayIndex * 86400
+	return time.Unix(int64(unixTime), 0)
 }
