@@ -24,13 +24,10 @@ func ThLoad() {
 }
 
 func LoadNext() {
-	minDay := int64(19700)
+	minDay := int64(19720)
 	maxDay := time.Now().Unix()/86400 - 1
 	tickers := GetInstruments()
 	for _, t := range tickers {
-		/*if t != "BTCUSDT" {
-			continue
-		}*/
 		for day := minDay; day < maxDay; day++ {
 			if !HasData(t, day) {
 				tm := TimeByDayIndex(day)
