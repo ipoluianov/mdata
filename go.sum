@@ -9,10 +9,13 @@ github.com/hirokisan/bybit v1.1.0 h1:ROFGF3/xmmVwLynD+LaD6R7My+Xzf7JZWSAdZOuIM4U
 github.com/hirokisan/bybit v1.1.0/go.mod h1:d/I/YB6Ii6NZIAjQvRpxLtBR1FC9SOlE0k5cRjb91kI=
 github.com/hirokisan/bybit/v2 v2.23.0 h1:VK45J2g0WiLBCMIXTMFe8a7e7lTKxx2C+aS5cLLPKB4=
 github.com/hirokisan/bybit/v2 v2.23.0/go.mod h1:owKYQ6LqedfM1bFqGLnLTLsWRmIeoP6edibEQ1wIx+Y=
+github.com/ipoluianov/rusty v0.0.0-20240121124100-e988c241e5a6 h1:B4z7rFzG1wSLBeiLU2fMMpvWX1sgund3MEjwveMsOag=
+github.com/ipoluianov/rusty v0.0.0-20240121124100-e988c241e5a6/go.mod h1:Zgw3R65KrL1RL/l7QnbSRI1JQNhzm7r3+j6XGmFEMB8=
 github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 h1:iQTw/8FWTuc7uiaSepXwyf3o52HaUYcV+Tu66S3F5GA=
 github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0/go.mod h1:1NbS8ALrpOvjt0rHPNLyCIeMtbizbir8U//inJ+zuB8=
 github.com/kardianos/service v1.2.2 h1:ZvePhAHfvo0A7Mftk/tEzqEZ7Q4lgnR8sGz4xu1YX60=
 github.com/kardianos/service v1.2.2/go.mod h1:CIMRFEJVL+0DS1a3Nx06NaMn4Dz63Ng6O7dl0qH0zVM=
 golang.org/x/sys v0.0.0-20201015000850-e3ed0017c211 h1:9UQO31fZ+0aKQOFldThf7BKPMJTiBfWycGh/u3UoO88=
 golang.org/x/sys v0.0.0-20201015000850-e3ed0017c211/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=

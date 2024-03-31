@@ -3,7 +3,7 @@ package app
 import (
 	"syscall"
 
-	"github.com/ipoluianov/rusty/logger"
+	"github.com/ipoluianov/mdata/logger"
 )
 
 func TuneFDs() {
